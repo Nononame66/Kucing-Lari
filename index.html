@@ -4,128 +4,84 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#f6c943">
-<title>Lebah Lari 🐝</title>
+<title>Lebah Lari</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main id="game">
 <canvas id="canvas"></canvas>
-
 <header id="hud">
   <div class="stat"><span>LEVEL</span><b id="level">1</b></div>
   <div class="stat"><span>SKOR</span><b id="score">0</b></div>
   <div class="stat"><span>🍯 MADU</span><b id="honey">0</b></div>
   <div class="stat"><span>🔥 COMBO</span><b id="combo">x0</b></div>
 </header>
-<div id="powerHud"></div>
 <button id="pause" class="round">Ⅱ</button>
-<div id="toast"></div>
+<div id="powerHud"></div><div id="toast"></div>
 
-<section id="start" class="screen">
-  <div class="panel">
-    <div class="bee-logo">🐝</div>
-    <h1>LEBAH LARI</h1>
-    <div class="profile">👤 <b id="profileName">Pemain</b> <button id="editName">EDIT</button></div>
-    <p>Bantu lebah melewati kebun, kumpulkan madu, gunakan power-up, dan capai sarang!</p>
-    <button id="play" class="primary">▶ MULAI</button>
-    <button id="tutorialMenu" class="secondary">📖 TUTORIAL</button>
-    <button id="shopMenu" class="secondary">🛍️ TOKO SKIN</button>
-    <div class="menu-row">
-      <button id="settingsMenu" class="secondary">⚙️ SETTINGS</button>
-      <button id="achMenu" class="secondary">🏆 PRESTASI</button>
-    </div>
-    <button id="creditsMenu" class="secondary">ℹ️ CREDITS</button>
-    <small>PC: WASD / Arrow • HP: Swipe / tombol arah</small>
-  </div>
-</section>
+<section id="start" class="screen"><div class="panel">
+  <div class="bee-logo">🐝</div><h1>LEBAH LARI</h1>
+  <div class="profile">👤 <b id="profileName">Pemain</b> <button id="editName">EDIT</button></div>
+  <p>Bantu lebah melewati kebun, kumpulkan madu, gunakan power-up, dan capai sarang!</p>
+  <button id="play" class="primary">▶ MULAI</button>
+  <button id="tutorialMenu" class="secondary">📖 TUTORIAL</button>
+  <button id="shopMenu" class="secondary">🛍️ TOKO SKIN</button>
+  <div class="menu-row"><button id="settingsMenu" class="secondary">⚙️ SETTINGS</button><button id="achMenu" class="secondary">🏆 PRESTASI</button></div>
+  <button id="creditsMenu" class="secondary">ℹ️ CREDITS</button>
+  <small>PC: WASD / Arrow • HP: Swipe / tombol arah</small>
+</div></section>
 
-<section id="nameScreen" class="screen hidden">
-  <div class="panel">
-    <h2>👤 PROFIL PEMAIN</h2>
-    <p>Nama ini tampil di menu dan layar hasil.</p>
-    <input id="nameInput" maxlength="16" placeholder="Masukkan nama">
-    <button id="saveName" class="primary">SIMPAN</button>
-    <button class="secondary back">BATAL</button>
-  </div>
-</section>
+<section id="nameScreen" class="screen hidden"><div class="panel">
+  <h2>👤 PROFIL PEMAIN</h2><p>Nama ditampilkan di menu dan hasil game.</p>
+  <input id="nameInput" maxlength="16" placeholder="Masukkan nama">
+  <button id="saveName" class="primary">SIMPAN</button><button class="secondary back">BATAL</button>
+</div></section>
 
-<section id="tutorialScreen" class="screen hidden">
-  <div class="panel">
-    <h2>📖 CARA BERMAIN</h2>
-    <div id="tutorialContent"></div>
-    <button id="nextTutorial" class="primary">LANJUT</button>
-    <button class="secondary back">KEMBALI</button>
-  </div>
-</section>
+<section id="tutorialScreen" class="screen hidden"><div class="panel">
+  <h2>📖 CARA BERMAIN</h2><div id="tutorialContent"></div>
+  <button id="nextTutorial" class="primary">LANJUT</button><button class="secondary back">KEMBALI</button>
+</div></section>
 
-<section id="settingsScreen" class="screen hidden">
-  <div class="panel">
-    <h2>⚙️ SETTINGS</h2>
-    <label class="setting">🔊 Musik <input type="checkbox" id="musicToggle" checked></label>
-    <label class="setting">🔔 Sound Effect <input type="checkbox" id="sfxToggle" checked></label>
-    <label class="setting">📳 Getar HP <input type="checkbox" id="vibrateToggle" checked></label>
-    <label class="setting">🎨 Mode Kontras <input type="checkbox" id="contrastToggle"></label>
-    <button class="secondary back">KEMBALI</button>
-  </div>
-</section>
+<section id="settingsScreen" class="screen hidden"><div class="panel">
+  <h2>⚙️ SETTINGS</h2>
+  <label class="setting">🔊 Musik <input type="checkbox" id="musicToggle"></label>
+  <label class="setting">🔔 Sound Effect <input type="checkbox" id="sfxToggle"></label>
+  <label class="setting">📳 Getar HP <input type="checkbox" id="vibrateToggle"></label>
+  <label class="setting">🎨 Mode Kontras <input type="checkbox" id="contrastToggle"></label>
+  <button class="secondary back">KEMBALI</button>
+</div></section>
 
-<section id="shopScreen" class="screen hidden">
-  <div class="panel">
-    <h2>🛍️ TOKO SKIN</h2>
-    <p>Saldo: 🍯 <b id="shopHoney">0</b></p>
-    <div id="skins" class="cards"></div>
-    <button class="secondary back">KEMBALI</button>
-  </div>
-</section>
+<section id="shopScreen" class="screen hidden"><div class="panel">
+  <h2>🛍️ TOKO SKIN</h2><p>Saldo: 🍯 <b id="shopHoney">0</b></p>
+  <div id="skins" class="cards"></div><button class="secondary back">KEMBALI</button>
+</div></section>
 
-<section id="achScreen" class="screen hidden">
-  <div class="panel">
-    <h2>🏆 PRESTASI</h2>
-    <div id="achievements" class="achievement-list"></div>
-    <button class="secondary back">KEMBALI</button>
-  </div>
-</section>
+<section id="achScreen" class="screen hidden"><div class="panel">
+  <h2>🏆 PRESTASI</h2><div id="achievements" class="achievement-list"></div>
+  <button class="secondary back">KEMBALI</button>
+</div></section>
 
-<section id="creditsScreen" class="screen hidden">
-  <div class="panel">
-    <h2>ℹ️ CREDITS</h2>
-    <p><b>LEBAH LARI</b></p>
-    <p>Game arcade endless runner bertema alam.</p>
-    <p>Dirancang untuk pembelajaran UI/UX & BE Game.</p>
-    <p>HTML5 • CSS3 • JavaScript Canvas</p>
-    <p>Playable di browser PC & mobile.</p>
-    <button class="secondary back">KEMBALI</button>
-  </div>
-</section>
+<section id="creditsScreen" class="screen hidden"><div class="panel">
+  <h2>ℹ️ CREDITS</h2><p><b>LEBAH LARI</b></p>
+  <p>Arcade endless runner bertema alam untuk pembelajaran UI/UX & BE Game.</p>
+  <p>HTML5 • CSS3 • JavaScript Canvas • LocalStorage</p>
+  <button class="secondary back">KEMBALI</button>
+</div></section>
 
-<section id="pauseScreen" class="screen hidden">
-  <div class="panel">
-    <h2>⏸️ PAUSE</h2>
-    <button id="resume" class="primary">LANJUT</button>
-    <button id="restartP" class="secondary">ULANGI</button>
-    <button id="menuP" class="secondary">MENU</button>
-  </div>
-</section>
+<section id="pauseScreen" class="screen hidden"><div class="panel">
+  <h2>⏸️ PAUSE</h2><button id="resume" class="primary">LANJUT</button>
+  <button id="restartP" class="secondary">ULANGI</button><button id="menuP" class="secondary">MENU</button>
+</div></section>
 
-<section id="gameover" class="screen hidden">
-  <div class="panel">
-    <div class="bee-logo">🐝</div>
-    <h2>LEBAH TERJATUH!</h2>
-    <p><b id="resultName">Pemain</b></p>
-    <p>Skor <b id="finalScore">0</b> • Level <b id="finalLevel">1</b></p>
-    <p>🍯 Madu didapat <b id="finalHoney">0</b></p>
-    <p>🏆 Rekor <b id="finalBest">0</b></p>
-    <p id="newRecord" class="record hidden">🎉 REKOR BARU!</p>
-    <button id="again" class="primary">MAIN LAGI</button>
-    <button id="home" class="secondary">MENU UTAMA</button>
-  </div>
-</section>
+<section id="gameover" class="screen hidden"><div class="panel">
+  <div class="bee-logo">🐝</div><h2>LEBAH TERJATUH!</h2>
+  <p><b id="resultName">Pemain</b></p><p>Skor <b id="finalScore">0</b> • Level <b id="finalLevel">1</b></p>
+  <p>🍯 Madu didapat <b id="finalHoney">0</b></p><p>🏆 Rekor <b id="finalBest">0</b></p>
+  <p id="newRecord" class="record hidden">🎉 REKOR BARU!</p>
+  <button id="again" class="primary">MAIN LAGI</button><button id="home" class="secondary">MENU UTAMA</button>
+</div></section>
 
-<div id="controls">
-  <button data-dir="up">▲</button><button data-dir="left">◀</button>
-  <button data-dir="down">▼</button><button data-dir="right">▶</button>
-</div>
+<div id="controls"><button data-dir="up">▲</button><button data-dir="left">◀</button><button data-dir="down">▼</button><button data-dir="right">▶</button></div>
 </main>
-<script src="game.js"></script>
-</body>
-</html>
+<script type="module" src="game.js"></script>
+</body></html>
