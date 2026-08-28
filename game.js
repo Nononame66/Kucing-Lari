@@ -1,105 +1,74 @@
-const canvas=document.getElementById("gameCanvas"),ctx=canvas.getContext("2d");
+const c=document.getElementById("canvas"),x=c.getContext("2d");
 const $=id=>document.getElementById(id);
-const GRID=50,HIVE_EVERY=15,START_ROWS=24;
-let W=0,H=0,COLS=0,rows=[],player=null,cameraY=0;
-let score=0,level=1,gameState="menu",highScore=Number(localStorage.getItem("lebahLariHighScore")||0);
-$("highscore").textContent=highScore;
+const GRID=50,HIVE=15;
+let W,H,COLS,rows=[],bee,score=0,level=1,honey=0,best=+localStorage.getItem("lebahBest")||0,state="menu",camera=0;
+let selected=localStorage.getItem("lebahSkin")||"classic",lastTime=0,toastTimer=0;
 
-function resize(){const r=canvas.getBoundingClientRect();canvas.width=Math.max(320,Math.floor(r.width*devicePixelRatio));canvas.height=Math.max(480,Math.floor(r.height*devicePixelRatio));ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);W=r.width;H=r.height;COLS=Math.max(5,Math.floor(W/GRID));}
-window.addEventListener("resize",resize); resize();
+const skins={
+ classic:{name:"Klasik",emoji:"🐝",unlock:0},
+ gold:{name:"Emas",emoji:"🟡",unlock:100},
+ red:{name:"Merah",emoji:"🔴",unlock:250},
+ ghost:{name:"Hantu",emoji:"👻",unlock:500},
+};
+const achievements=[
+ ["first","Langkah Pertama","Capai skor 15.",s=>s>=15],
+ ["honey","Pecinta Madu","Kumpulkan 10 madu.",s=>honey>=10],
+ ["level3","Penjelajah","Capai Level 3.",s=>level>=3],
+ ["score100","Lebah Hebat","Capai skor 100.",s=>s>=100],
+ ["score250","Raja Kebun","Capai skor 250.",s=>s>=250],
+];
 
-const rand=(a,b)=>Math.random()*(b-a)+a;
-const choice=a=>a[Math.floor(Math.random()*a.length)];
+function resize(){let r=c.getBoundingClientRect();W=r.width;H=r.height;c.width=Math.floor(W*devicePixelRatio);c.height=Math.floor(H*devicePixelRatio);x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);COLS=Math.max(5,Math.floor(W/GRID))}
+addEventListener("resize",resize);resize();
+const rnd=(a,b)=>Math.random()*(b-a)+a, pick=a=>a[Math.floor(Math.random()*a.length)];
 
 class Bee{
-  constructor(){this.reset()}
-  reset(){this.gridX=Math.floor(COLS/2);this.gridY=2;this.x=this.gridX*GRID+5;this.y=H-(this.gridY*GRID)+5;this.w=40;this.h=40;this.wave=0;this.jump=0}
-  update(){const tx=this.gridX*GRID+5,ty=H-this.gridY*GRID+5;this.x+=(tx-this.x)*.28;this.y+=(ty-this.y)*.28;this.wave+=.18}
-  draw(){const bob=Math.sin(this.wave)*1.5, x=this.x,y=this.y+bob;
-    ctx.save();ctx.translate(x+20,y+20);
-    ctx.fillStyle="#0003";ctx.beginPath();ctx.ellipse(0,17,17,6,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle="#ffffffbb";ctx.beginPath();ctx.ellipse(-9,-13,8,13,-.35,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#34495e";ctx.stroke();
-    ctx.beginPath();ctx.ellipse(9,-13,8,13,.35,0,Math.PI*2);ctx.fill();ctx.stroke();
-    const g=ctx.createRadialGradient(-5,-8,2,0,0,22);g.addColorStop(0,"#fff08a");g.addColorStop(1,"#f39c12");ctx.fillStyle=g;
-    ctx.beginPath();ctx.ellipse(0,0,20,15,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-    ctx.fillStyle="#283747";ctx.fillRect(-7,-14,5,28);ctx.fillRect(5,-14,5,28);
-    ctx.fillStyle="#111";ctx.beginPath();ctx.arc(13,-6,3,0,Math.PI*2);ctx.fill();
-    ctx.restore();
-  }
+ reset(){this.gx=Math.floor(COLS/2);this.gy=2;this.px=this.gx*GRID+5;this.py=H-this.gy*GRID+5;this.wave=0}
+ update(){this.px+=(this.gx*GRID+5-this.px)*.3;this.py+=(H-this.gy*GRID+5-this.py)*.3;this.wave+=.2}
+ draw(){let X=this.px+20,Y=this.py+20+Math.sin(this.wave)*1.5; x.save();x.translate(X,Y);
+ x.fillStyle="#0003";x.beginPath();x.ellipse(0,18,17,6,0,0,6.28);x.fill();
+ x.font="38px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(skins[selected].emoji,0,0);x.restore()}
 }
-
 class Row{
-  constructor(y,lvl){
-    this.gridY=y;this.y=H-y*GRID;this.flowers=[];
-    this.type=(y>2&&(y-2)%HIVE_EVERY===0)?"hive":(Math.random()<.48?"safe":"flower");
-    this.speed=(rand(1.0,1.8)*(1+(lvl-1)*.3))*(Math.random()<.5?-1:1);
-    if(this.type==="flower"){
-      const n=2+Math.floor(Math.random()*3);
-      for(let i=0;i<n;i++)this.flowers.push({x:rand(-20,W+20),size:rand(19,24),rot:rand(0,6.28),color:choice(["#ff5263","#9b59b6","#3498db","#f368e0"])});
-    }
-  }
-  update(){if(this.type!=="flower")return;for(const f of this.flowers){f.x+=this.speed;f.rot+=.015;if(f.x>W+45)f.x=-45;if(f.x<-45)f.x=W+45}}
-  draw(){
-    const y=this.y+cameraY;
-    if(y<-GRID||y>H+GRID)return;
-    if(this.type==="safe"){ctx.fillStyle="#49a82d";ctx.fillRect(0,y,W,GRID);for(let x=10;x<W;x+=47){ctx.fillStyle="#79c653";ctx.beginPath();ctx.arc(x,y+rand(12,38),2,0,6.28);ctx.fill()}}
-    else if(this.type==="hive"){const g=ctx.createLinearGradient(0,y,0,y+GRID);g.addColorStop(0,"#f6c443");g.addColorStop(1,"#d98715");ctx.fillStyle=g;ctx.fillRect(0,y,W,GRID);ctx.fillStyle="#fff7";ctx.font="bold 12px system-ui";ctx.textAlign="center";ctx.fillText("🍯 SARANG CHECKPOINT 🍯",W/2,y+30)}
-    else{ctx.fillStyle="#5fbd36";ctx.fillRect(0,y,W,GRID);ctx.fillStyle="#ffffff0b";ctx.fillRect(0,y,W,1);
-      for(const f of this.flowers){ctx.save();ctx.translate(f.x,y+25);ctx.rotate(f.rot);ctx.fillStyle=f.color;for(let i=0;i<6;i++){ctx.rotate(Math.PI/3);ctx.beginPath();ctx.ellipse(f.size*.55,0,f.size*.5,f.size*.28,0,0,6.28);ctx.fill()}ctx.fillStyle="#ffe66d";ctx.beginPath();ctx.arc(0,0,7,0,6.28);ctx.fill();ctx.restore()}
-    }
-  }
+ constructor(g,l){this.g=g;this.y=H-g*GRID;this.type=(g>2&&(g-2)%HIVE===0)?"hive":(Math.random()<.5?"safe":"flower");this.flowers=[];this.speed=rnd(1,1.7)*(1+(l-1)*.3)*(Math.random()<.5?-1:1);
+  if(this.type==="flower")for(let i=0,n=2+Math.floor(Math.random()*3);i<n;i++)this.flowers.push({x:rnd(-30,W+30),r:rnd(18,23),rot:rnd(0,6.28),col:pick(["#ff5364","#9b59b6","#3498db","#f368e0"])})
+ }
+ update(dt){if(this.type==="flower")for(const f of this.flowers){f.x+=this.speed*dt;f.rot+=.01*dt;if(f.x>W+45)f.x=-45;if(f.x<-45)f.x=W+45}}
+ draw(){let y=this.y+camera;if(y<-50||y>H+50)return;
+  if(this.type==="safe"){x.fillStyle="#4ca82f";x.fillRect(0,y,W,GRID);x.fillStyle="#77c957";for(let i=10;i<W;i+=45){x.beginPath();x.arc(i,y+25+(this.g%2)*6,2,0,6.28);x.fill()}}
+  else if(this.type==="hive"){let g=x.createLinearGradient(0,y,0,y+GRID);g.addColorStop(0,"#f8c943");g.addColorStop(1,"#d78312");x.fillStyle=g;x.fillRect(0,y,W,GRID);x.fillStyle="#fff9";x.font="bold 12px system-ui";x.textAlign="center";x.fillText("🍯 SARANG CHECKPOINT 🍯",W/2,y+30)}
+  else{x.fillStyle="#61b838";x.fillRect(0,y,W,GRID);for(const f of this.flowers){x.save();x.translate(f.x,y+25);x.rotate(f.rot);x.fillStyle=f.col;for(let i=0;i<6;i++){x.rotate(1.047);x.beginPath();x.ellipse(f.r*.55,0,f.r*.5,f.r*.28,0,0,6.28);x.fill()}x.fillStyle="#ffe66d";x.beginPath();x.arc(0,0,7,0,6.28);x.fill();x.restore()}}
+ }
 }
+function newGame(){resize();rows=[];score=0;level=1;honey=0;camera=0;bee=new Bee;bee.reset();for(let i=0;i<24;i++){let r=new Row(i,1);if(i<=2){r.type="safe";r.flowers=[]}rows.push(r)}state="playing";hideScreens();$("pause").style.display="block";hud()}
+function hideScreens(){document.querySelectorAll(".screen").forEach(e=>e.classList.add("hidden"))}
+function hud(){$("level").textContent=level;$("score").textContent=score;$("honey").textContent=honey;$("best").textContent=best}
+function toast(t){$("toast").textContent=t;$("toast").classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),1100)}
+function move(d){
+ if(state==="menu"){newGame();return} if(state==="gameover"){newGame();return} if(state!=="playing")return;
+ if(d==="up"){bee.gy++;let dist=bee.gy-2;if(dist>score)score=dist;let nl=Math.floor(dist/HIVE)+1;if(nl>level){level=nl;honey+=5;score+=5;toast("🍯 SARANG! +5 Madu +5 Skor")}}
+ if(d==="down"&&bee.gy>2)bee.gy--;if(d==="left"&&bee.gx>0)bee.gx--;if(d==="right"&&bee.gx<COLS-1)bee.gx++;
+ if(score>best){best=score;localStorage.setItem("lebahBest",best)}checkAchievements();hud()
+}
+function collision(){let r=rows.find(z=>z.g===bee.gy);if(!r||r.type!=="flower")return false;let px=bee.px+20,py=bee.py+20;return r.flowers.some(f=>Math.hypot(px-f.x,py-(r.y+25))<f.r+13)}
+function gameOver(){state="gameover";$("finalScore").textContent=score;$("finalLevel").textContent=level;$("finalHoney").textContent=honey;$("finalBest").textContent=best;$("newRecord").classList.toggle("hidden",score<best);$("gameover").classList.remove("hidden");$("pause").style.display="none"}
+function checkAchievements(){let a=JSON.parse(localStorage.getItem("lebahAchievements")||"[]");for(const q of achievements)if(!a.includes(q[0])&&q[3](score)){a.push(q[0]);localStorage.setItem("lebahAchievements",JSON.stringify(a));toast("🏆 "+q[1]+" terbuka!")}}
+function renderSkins(){let box=$("skins");box.innerHTML="";for(const [id,s] of Object.entries(skins)){let unlocked=best>=s.unlock;let d=document.createElement("button");d.className="skin "+(selected===id?"selected ":"")+(unlocked?"":"locked");d.innerHTML=`<div class="emoji">${s.emoji}</div><b>${s.name}</b><br><small>${unlocked?"PILIH":"Skor "+s.unlock}</small>`;d.onclick=()=>{if(unlocked){selected=id;localStorage.setItem("lebahSkin",id);renderSkins()}};box.appendChild(d)}}
+function renderAchievements(){let box=$("achievements"),done=JSON.parse(localStorage.getItem("lebahAchievements")||"[]");box.innerHTML=achievements.map(a=>`<div class="achievement ${done.includes(a[0])?"done":""}"><strong>${done.includes(a[0])?"✅":"🔒"} ${a[1]}</strong><small>${a[2]}</small></div>`).join("")}
 
-function resetGame(){
-  resize();rows=[];score=0;level=1;cameraY=0;player=new Bee();
-  for(let i=0;i<START_ROWS;i++){const r=new Row(i,1);if(i<=2){r.type="safe";r.flowers=[]}rows.push(r)}
-  updateHud();gameState="playing";hideAll();$("pauseBtn").style.display="block";
-}
-function updateHud(){$("score").textContent=score;$("level").textContent=level;$("highscore").textContent=highScore}
-function hideAll(){$("menu").classList.add("hidden");$("pauseMenu").classList.add("hidden");$("gameOver").classList.add("hidden")}
-function move(dir){
-  if(gameState==="menu"){resetGame();return}
-  if(gameState==="gameover"){resetGame();return}
-  if(gameState!=="playing")return;
-  if(dir==="up"){player.gridY++;const dist=player.gridY-2;if(dist>score)score=dist;
-    const newLevel=Math.floor(Math.max(0,dist)/HIVE_EVERY)+1;
-    if(newLevel>level){level=newLevel;score+=5;showToast("🍯 +5 BONUS! LEVEL "+level)}
-  }else if(dir==="down"){if(player.gridY>2)player.gridY--}
-  else if(dir==="left"){if(player.gridX>0)player.gridX--}
-  else if(dir==="right"){if(player.gridX<COLS-1)player.gridX++}
-  if(score>highScore){highScore=score;localStorage.setItem("lebahLariHighScore",highScore)}
-  updateHud();
-}
-function collision(){
-  const row=rows.find(r=>r.gridY===player.gridY);
-  if(!row||row.type!=="flower")return false;
-  const px=player.x+20,py=player.y+20;
-  return row.flowers.some(f=>Math.hypot(px-f.x,py-(row.y+25))<f.size*.85+13);
-}
-function endGame(){gameState="gameover";$("finalScore").textContent=score;$("finalLevel").textContent=level;$("finalHigh").textContent=highScore;$("gameOver").classList.remove("hidden");$("pauseBtn").style.display="none"}
-let toastUntil=0,toastText="";
-function showToast(t){toastText=t;toastUntil=performance.now()+1200}
-function drawToast(){if(performance.now()>toastUntil)return;ctx.save();ctx.font="900 20px system-ui";ctx.textAlign="center";ctx.fillStyle="#0009";ctx.fillRect(W/2-120,H*.28-27,240,45);ctx.fillStyle="#fff";ctx.fillText(toastText,W/2,H*.28);ctx.restore()}
-function loop(){
-  ctx.clearRect(0,0,W,H);
-  if(gameState==="playing"){
-    const top=rows[rows.length-1]?.gridY||0;if(player.gridY>top-10)for(let i=1;i<=12;i++)rows.push(new Row(top+i,level));
-    if(rows.length>55)rows=rows.filter(r=>r.gridY>player.gridY-18);
-    const target=(player.gridY*GRID)-H+250;cameraY+=(target-cameraY)*.08;
-  }
-  for(const r of rows){r.update();r.draw()}
-  if(player){player.update();ctx.save();ctx.translate(0,cameraY);player.draw();ctx.restore()}
-  if(gameState==="playing"&&collision())endGame();
-  drawToast();
-  requestAnimationFrame(loop);
-}
-$("startBtn").onclick=resetGame;$("restartBtn").onclick=resetGame;$("restartPauseBtn").onclick=resetGame;
-$("resumeBtn").onclick=()=>{gameState="playing";$("pauseMenu").classList.add("hidden")};
-$("pauseBtn").onclick=()=>{if(gameState==="playing"){gameState="paused";$("pauseMenu").classList.remove("hidden")}};
-document.querySelectorAll("#touch-controls button").forEach(b=>{b.addEventListener("pointerdown",e=>{e.preventDefault();move(b.dataset.dir)})});
-let sx=0,sy=0;
-canvas.addEventListener("pointerdown",e=>{sx=e.clientX;sy=e.clientY});
-canvas.addEventListener("pointerup",e=>{const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<28)return;move(Math.abs(dx)>Math.abs(dy)?(dx>0?"right":"left"):(dy>0?"down":"up"))});
-window.addEventListener("keydown",e=>{const k=e.key.toLowerCase();const map={arrowup:"up",w:"up",arrowdown:"down",s:"down",arrowleft:"left",a:"left",arrowright:"right",d:"right"};if(map[k]){e.preventDefault();move(map[k])}else if(k==="p"&&gameState==="playing")$("pauseBtn").click()});
-player=new Bee();for(let i=0;i<START_ROWS;i++){const r=new Row(i,1);if(i<=2){r.type="safe";r.flowers=[]}rows.push(r)}
-$("pauseBtn").style.display="none";updateHud();loop();
+$("play").onclick=newGame;$("again").onclick=newGame;$("restartP").onclick=newGame;
+$("resume").onclick=()=>{state="playing";$("pauseScreen").classList.add("hidden")};
+$("pause").onclick=()=>{if(state==="playing"){state="paused";$("pauseScreen").classList.remove("hidden")}};
+$("home").onclick=()=>{state="menu";hideScreens();$("start").classList.remove("hidden");$("pause").style.display="none"};
+$("skinMenu").onclick=()=>{renderSkins();$("start").classList.add("hidden");$("skinScreen").classList.remove("hidden")};
+$("achMenu").onclick=()=>{renderAchievements();$("start").classList.add("hidden");$("achScreen").classList.remove("hidden")};
+document.querySelectorAll(".back").forEach(b=>b.onclick=()=>{hideScreens();$("start").classList.remove("hidden")});
+document.querySelectorAll("#controls button").forEach(b=>b.addEventListener("pointerdown",e=>{e.preventDefault();move(b.dataset.dir)}));
+let sx=0,sy=0;c.addEventListener("pointerdown",e=>{sx=e.clientX;sy=e.clientY});c.addEventListener("pointerup",e=>{let dx=e.clientX-sx,dy=e.clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<28)return;move(Math.abs(dx)>Math.abs(dy)?dx>0?"right":"left":dy>0?"down":"up")});
+addEventListener("keydown",e=>{let k=e.key.toLowerCase(),m={arrowup:"up",w:"up",arrowdown:"down",s:"down",arrowleft:"left",a:"left",arrowright:"right",d:"right"};if(m[k]){e.preventDefault();move(m[k])}if(k==="p")$("pause").click()});
+
+bee=new Bee;bee.reset();$("pause").style.display="none";hud();
+function loop(t){let dt=Math.min(2,(t-lastTime||16)/16);lastTime=t;x.clearRect(0,0,W,H);
+ if(state==="playing"){let top=rows[rows.length-1]?.g||0;if(bee.gy>top-10)for(let i=1;i<=12;i++)rows.push(new Row(top+i,level));if(rows.length>55)rows=rows.filter(r=>r.g>bee.gy-18);let target=bee.gy*GRID-H+250;camera+=(target-camera)*.08}
+ for(const r of rows){r.update(dt);r.draw()}if(bee){bee.update();x.save();x.translate(0,camera);bee.draw();x.restore()}if(state==="playing"&&collision())gameOver();requestAnimationFrame(loop)}
+requestAnimationFrame(loop);

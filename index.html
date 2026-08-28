@@ -1,63 +1,81 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <meta name="theme-color" content="#f6b93b">
-  <title>Lebah Lari 🐝</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#f7c843">
+<title>Lebah Lari 🐝</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main id="game-container">
-    <canvas id="gameCanvas"></canvas>
+<main id="game">
+<canvas id="canvas"></canvas>
 
-    <div id="hud">
-      <div class="hud-box"><small>LEVEL</small><b id="level">1</b></div>
-      <div class="hud-box"><small>SKOR</small><b id="score">0</b></div>
-      <div class="hud-box"><small>TERBAIK</small><b id="highscore">0</b></div>
-    </div>
+<header id="hud">
+  <div class="stat"><span>LEVEL</span><b id="level">1</b></div>
+  <div class="stat"><span>SKOR</span><b id="score">0</b></div>
+  <div class="stat"><span>🍯 MADU</span><b id="honey">0</b></div>
+  <div class="stat"><span>TERBAIK</span><b id="best">0</b></div>
+</header>
 
-    <button id="pauseBtn" class="icon-btn" aria-label="Pause">Ⅱ</button>
+<button id="pause" class="round">Ⅱ</button>
+<div id="toast"></div>
 
-    <section id="menu" class="overlay">
-      <div class="card">
-        <div class="logo">🐝</div>
-        <h1>LEBAH LARI</h1>
-        <p>Seberapa jauh kamu bisa membantu lebah pulang ke sarangnya?</p>
-        <button id="startBtn" class="main-btn">MULAI</button>
-        <div class="help">
-          <span>⌨️ PC: WASD / Arrow</span>
-          <span>📱 HP: Swipe / tombol arah</span>
-        </div>
-      </div>
-    </section>
+<section id="start" class="screen">
+  <div class="panel">
+    <div class="bee-logo">🐝</div>
+    <h1>LEBAH LARI</h1>
+    <p>Bantu lebah melewati kebun, kumpulkan madu, hindari bunga, dan capai sarang!</p>
+    <button id="play" class="primary">MULAI</button>
+    <button id="skinMenu" class="secondary">🐝 SKIN LEBAH</button>
+    <button id="achMenu" class="secondary">🏆 PENCAPAIAN</button>
+    <small>PC: WASD / Arrow • HP: Swipe / tombol</small>
+  </div>
+</section>
 
-    <section id="pauseMenu" class="overlay hidden">
-      <div class="card">
-        <h2>⏸ PAUSE</h2>
-        <button id="resumeBtn" class="main-btn">LANJUT</button>
-        <button id="restartPauseBtn" class="secondary-btn">ULANGI</button>
-      </div>
-    </section>
+<section id="pauseScreen" class="screen hidden">
+  <div class="panel">
+    <h2>⏸️ PAUSE</h2>
+    <button id="resume" class="primary">LANJUT</button>
+    <button id="restartP" class="secondary">ULANGI</button>
+  </div>
+</section>
 
-    <section id="gameOver" class="overlay hidden">
-      <div class="card">
-        <div class="logo">💥</div>
-        <h2>LEBAH TERJATUH!</h2>
-        <p>Skor kamu: <b id="finalScore">0</b></p>
-        <p>Level: <b id="finalLevel">1</b></p>
-        <p>High Score: <b id="finalHigh">0</b></p>
-        <button id="restartBtn" class="main-btn">MAIN LAGI</button>
-      </div>
-    </section>
+<section id="gameover" class="screen hidden">
+  <div class="panel">
+    <div class="bee-logo">💥</div>
+    <h2>LEBAH TERJATUH!</h2>
+    <p>Skor <b id="finalScore">0</b> • Level <b id="finalLevel">1</b></p>
+    <p>🍯 Madu <b id="finalHoney">0</b> • Rekor <b id="finalBest">0</b></p>
+    <p id="newRecord" class="record hidden">🎉 REKOR BARU!</p>
+    <button id="again" class="primary">MAIN LAGI</button>
+    <button id="home" class="secondary">MENU UTAMA</button>
+  </div>
+</section>
 
-    <div id="touch-controls" aria-label="Kontrol">
-      <button data-dir="up">▲</button>
-      <button data-dir="left">◀</button>
-      <button data-dir="down">▼</button>
-      <button data-dir="right">▶</button>
-    </div>
-  </main>
-  <script src="game.js"></script>
+<section id="skinScreen" class="screen hidden">
+  <div class="panel">
+    <h2>🐝 SKIN LEBAH</h2>
+    <div id="skins" class="cards"></div>
+    <button class="secondary back">KEMBALI</button>
+  </div>
+</section>
+
+<section id="achScreen" class="screen hidden">
+  <div class="panel">
+    <h2>🏆 PENCAPAIAN</h2>
+    <div id="achievements" class="achievement-list"></div>
+    <button class="secondary back">KEMBALI</button>
+  </div>
+</section>
+
+<div id="controls">
+  <button data-dir="up">▲</button>
+  <button data-dir="left">◀</button>
+  <button data-dir="down">▼</button>
+  <button data-dir="right">▶</button>
+</div>
+</main>
+<script src="game.js"></script>
 </body>
 </html>
