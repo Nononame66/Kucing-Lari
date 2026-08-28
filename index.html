@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#f6c943">
-<title>Lebah Lari</title>
+<title>Kucing Lari</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
@@ -16,16 +16,16 @@
 <header id="hud">
   <div class="stat"><span>LEVEL</span><b id="level">1</b></div>
   <div class="stat"><span>SKOR</span><b id="score">0</b></div>
-  <div class="stat"><span><i class="icon-slot" data-icon="honey"></i> MADU</span><b id="honey">0</b></div>
+  <div class="stat"><span><i class="icon-slot" data-icon="fish"></i> IKAN</span><b id="fish">0</b></div>
   <div class="stat"><span>COMBO</span><b id="combo">x0</b></div>
 </header>
 <button id="pause" class="round" aria-label="Jeda">Ⅱ</button>
 <div id="powerHud"></div><div id="toast"></div>
 
 <section id="start" class="screen"><div class="panel">
-  <i class="bee-logo-slot" data-bee="large"></i><h1>LEBAH LARI</h1>
+  <i class="cat-logo-slot" data-cat="large"></i><h1>KUCING LARI</h1>
   <div class="profile"><i class="icon-slot" data-icon="person"></i> <b id="profileName">Pemain</b> <button id="editName"><i class="icon-slot" data-icon="pencil"></i> EDIT</button></div>
-  <p>Bantu lebah melewati kebun, kumpulkan madu, gunakan power-up, dan capai sarang!</p>
+  <p>Bantu kucing melewati taman, kumpulkan ikan, hindari lebah, dan capai rumah!</p>
   <button id="play" class="primary"><i class="icon-slot" data-icon="play"></i> MULAI</button>
   <button id="tutorialMenu" class="secondary"><i class="icon-slot" data-icon="book"></i> TUTORIAL</button>
   <button id="shopMenu" class="secondary"><i class="icon-slot" data-icon="bag"></i> TOKO SKIN</button>
@@ -55,7 +55,7 @@
 </div></section>
 
 <section id="shopScreen" class="screen hidden"><div class="panel">
-  <h2><i class="icon-slot" data-icon="bag"></i> TOKO SKIN</h2><p>Saldo: <i class="icon-slot" data-icon="honey"></i> <b id="shopHoney">0</b></p>
+  <h2><i class="icon-slot" data-icon="bag"></i> TOKO SKIN</h2><p>Saldo: <i class="icon-slot" data-icon="fish"></i> <b id="shopFish">0</b></p>
   <div id="skins" class="cards"></div><button class="secondary back">KEMBALI</button>
 </div></section>
 
@@ -65,8 +65,8 @@
 </div></section>
 
 <section id="creditsScreen" class="screen hidden"><div class="panel">
-  <h2><i class="icon-slot" data-icon="info"></i> CREDITS</h2><p><b>LEBAH LARI</b></p>
-  <p>Arcade endless runner bertema alam untuk pembelajaran UI/UX & BE Game.</p>
+  <h2><i class="icon-slot" data-icon="info"></i> CREDITS</h2><p><b>KUCING LARI</b></p>
+  <p>Arcade endless runner: kucing menghindari lebah untuk pembelajaran UI/UX & BE Game.</p>
   <p>HTML5 • CSS3 • JavaScript Canvas • LocalStorage</p>
   <button class="secondary back">KEMBALI</button>
 </div></section>
@@ -77,9 +77,9 @@
 </div></section>
 
 <section id="gameover" class="screen hidden"><div class="panel">
-  <i class="bee-logo-slot" data-bee="large"></i><h2>LEBAH TERJATUH!</h2>
+  <i class="cat-logo-slot" data-cat="large"></i><h2>KUCING KESENGAT!</h2>
   <p><b id="resultName">Pemain</b></p><p>Skor <b id="finalScore">0</b> • Level <b id="finalLevel">1</b></p>
-  <p><i class="icon-slot" data-icon="honey"></i> Madu didapat <b id="finalHoney">0</b></p><p><i class="icon-slot" data-icon="trophy"></i> Rekor <b id="finalBest">0</b></p>
+  <p><i class="icon-slot" data-icon="fish"></i> Ikan didapat <b id="finalFish">0</b></p><p><i class="icon-slot" data-icon="trophy"></i> Rekor <b id="finalBest">0</b></p>
   <p id="newRecord" class="record hidden">REKOR BARU!</p>
   <button id="again" class="primary">MAIN LAGI</button><button id="home" class="secondary">MENU UTAMA</button>
 </div></section>
