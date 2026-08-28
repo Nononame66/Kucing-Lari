@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#f6c943">
 <title>Lebah Lari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,7 +19,7 @@
   <div class="stat"><span>🍯 MADU</span><b id="honey">0</b></div>
   <div class="stat"><span>🔥 COMBO</span><b id="combo">x0</b></div>
 </header>
-<button id="pause" class="round">Ⅱ</button>
+<button id="pause" class="round" aria-label="Jeda">Ⅱ</button>
 <div id="powerHud"></div><div id="toast"></div>
 
 <section id="start" class="screen"><div class="panel">
@@ -81,7 +84,12 @@
   <button id="again" class="primary">MAIN LAGI</button><button id="home" class="secondary">MENU UTAMA</button>
 </div></section>
 
-<div id="controls"><button data-dir="up">▲</button><button data-dir="left">◀</button><button data-dir="down">▼</button><button data-dir="right">▶</button></div>
+<div id="controls">
+  <button data-dir="up" aria-label="Naik">▲</button>
+  <button data-dir="left" aria-label="Kiri">◀</button>
+  <button data-dir="down" aria-label="Turun">▼</button>
+  <button data-dir="right" aria-label="Kanan">▶</button>
+</div>
 </main>
 <script type="module" src="game.js"></script>
 </body></html>
