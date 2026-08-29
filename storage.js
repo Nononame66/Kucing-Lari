@@ -1,4 +1,4 @@
-// ABOUTME: Reads and writes player profile, currency, skins, settings, and achievements.
+// ABOUTME: Reads and writes player profile, currency, skins, settings, achievements, and leaderboard.
 // ABOUTME: Wraps localStorage with JSON-safe getters/setters.
 const get=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}};
 export const profile=()=>localStorage.getItem("kucingProfile")||"Pemain";
@@ -15,3 +15,5 @@ export const settings=()=>get("kucingSettings",{music:true,sfx:true,vibrate:true
 export function setSettings(v){localStorage.setItem("kucingSettings",JSON.stringify(v))}
 export const achievementsDone=()=>get("kucingAchievements",[]);
 export function setAchievements(v){localStorage.setItem("kucingAchievements",JSON.stringify(v))}
+export const leaderboard=()=>get("kucingLeaderboard",[]);
+export function addToLeaderboard(entry){const list=leaderboard();list.push(entry);list.sort((a,b)=>b.score-a.score);const top=list.slice(0,5);localStorage.setItem("kucingLeaderboard",JSON.stringify(top));return top}

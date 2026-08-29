@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#f6c943">
+<meta name="description" content="Kucing Lari — arcade endless runner: bantu kucing menghindari lebah, kumpulkan ikan, dan raih skor tertinggi!">
+<meta property="og:title" content="Kucing Lari">
+<meta property="og:description" content="Arcade endless runner: kucing menghindari lebah, kumpulkan ikan, kejar rekor tertinggi!">
+<meta property="og:type" content="website">
+<meta property="og:image" content="og-image.png">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Kucing Lari</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,6 +29,7 @@
 </header>
 <button id="pause" class="round" aria-label="Jeda">Ⅱ</button>
 <div id="powerHud"></div><div id="toast"></div>
+<div id="countdownOverlay" class="hidden"></div>
 
 <section id="start" class="screen"><div class="panel">
   <i class="cat-logo-slot" data-cat="large"></i><h1>KUCING LARI</h1>
@@ -30,7 +39,7 @@
   <button id="tutorialMenu" class="secondary"><i class="icon-slot" data-icon="book"></i> TUTORIAL</button>
   <button id="shopMenu" class="secondary"><i class="icon-slot" data-icon="bag"></i> TOKO SKIN</button>
   <div class="menu-row"><button id="settingsMenu" class="secondary"><i class="icon-slot" data-icon="dial"></i> SETTINGS</button><button id="achMenu" class="secondary"><i class="icon-slot" data-icon="trophy"></i> PRESTASI</button></div>
-  <button id="creditsMenu" class="secondary"><i class="icon-slot" data-icon="info"></i> CREDITS</button>
+  <div class="menu-row"><button id="leaderboardMenu" class="secondary"><i class="icon-slot" data-icon="rank"></i> PERINGKAT</button><button id="creditsMenu" class="secondary"><i class="icon-slot" data-icon="info"></i> CREDITS</button></div>
   <small>PC: WASD / Arrow • HP: Swipe / tombol arah</small>
 </div></section>
 
@@ -61,6 +70,11 @@
 
 <section id="achScreen" class="screen hidden"><div class="panel">
   <h2><i class="icon-slot" data-icon="trophy"></i> PRESTASI</h2><div id="achievements" class="achievement-list"></div>
+  <button class="secondary back">KEMBALI</button>
+</div></section>
+
+<section id="leaderboardScreen" class="screen hidden"><div class="panel">
+  <h2><i class="icon-slot" data-icon="rank"></i> PERINGKAT</h2><div id="leaderboardList" class="achievement-list"></div>
   <button class="secondary back">KEMBALI</button>
 </div></section>
 

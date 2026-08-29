@@ -16,6 +16,7 @@ export const icon={
  pencil:svg('<path d="M4 20l.9-3.8L15.6 5.5l2.9 2.9L7.8 19.1z"/><path d="M13.9 7.2l2.9 2.9"/>'),
  check:svg('<path d="M4 12.5l5 5L20 6"/>'),
  lock:svg('<rect x="6" y="10.5" width="12" height="9" rx="2"/><path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7"/>'),
+ rank:svg('<path d="M4 20v-7h5v7z"/><path d="M9.5 20V8h5v12z"/><path d="M15 20v-9h5v9z"/>'),
  fish:'<svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><ellipse cx="9" cy="12" rx="7" ry="4.2" fill="#8ee7ff" stroke="#2b93b8" stroke-width="1.2"/><path d="M16 12l5-4.5v9z" fill="#8ee7ff" stroke="#2b93b8" stroke-width="1.2"/><circle cx="5.5" cy="11" r="1" fill="#0b3d4d"/></svg>',
  play:'<svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="M6 4.5v15l13-7.5z" fill="currentColor"/></svg>'
 };
