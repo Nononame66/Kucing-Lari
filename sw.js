@@ -1,7 +1,7 @@
 // ABOUTME: Service worker caching core game assets so the app is installable and works offline.
 // ABOUTME: Uses cache-first strategy with a versioned cache name for easy invalidation on updates.
-const CACHE="kucinglari-v1";
-const ASSETS=["./","./index.html","./style.css","./game.js","./ui.js","./data.js","./storage.js","./icons.js","./audio.js","./particles.js","./manifest.json","./icon-192.png","./icon-512.png"];
+const CACHE="kucinglari-v2";
+const ASSETS=["./","./index.html","./style.css","./game.js","./ui.js","./data.js","./storage.js","./icons.js","./audio.js","./particles.js","./manifest.json","./icon-192.png","./icon-512.png","./cat-sprite.png"];
 
 self.addEventListener("install",e=>{
  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));

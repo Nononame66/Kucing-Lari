@@ -3,10 +3,10 @@
 export const GRID=50,CHECKPOINT=15;
 export const skins={
  classic:{name:"Klasik",cost:0,body:"#f6c343",stripe:"#2b2118"},
- gold:{name:"Emas",cost:50,body:"#ffe27a",stripe:"#b8860b",shine:true},
- red:{name:"Merah",cost:120,body:"#ff7a63",stripe:"#7a1d10"},
+ gold:{name:"Emas",cost:50,body:"#ffe27a",stripe:"#b8860b",shine:true,tint:"rgba(255,210,60,.35)"},
+ red:{name:"Merah",cost:120,body:"#ff7a63",stripe:"#7a1d10",tint:"rgba(255,70,60,.4)"},
  ghost:{name:"Hantu",cost:250,body:"#e4ecff",stripe:"#9db0d6",alpha:.6},
- queen:{name:"Ratu",cost:500,body:"#ffd34e",stripe:"#7a4b00",crown:true}
+ queen:{name:"Ratu",cost:500,body:"#ffd34e",stripe:"#7a4b00",crown:true,tint:"rgba(255,211,78,.22)"}
 };
 export const achievements=[
  ["first","Langkah Pertama","Capai skor 15.",s=>s.score>=15],
